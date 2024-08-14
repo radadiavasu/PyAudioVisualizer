@@ -82,7 +82,8 @@ def main():
         audio_length = len(y) // sr
         frames_per_second = len(y) // audio_length
         audio_format = audio_file.type.split("/")[-1].upper()
-        samples = np.arange(sr * audio_length)
+        # samples = np.arange(sr * audio_length)
+        samples = np.arange(len(y))
         frequency = 440; volume = 10000; audio_data = volume * np.sin(2 * np.pi * frequency * samples / sr)[1:]
 
         # Display information in table format
@@ -98,7 +99,7 @@ def main():
         st.audio(audio_bytes, format="mp3/wav")
 
         # Sidebar option menu
-        selected_option = st.sidebar.radio("Select Visualization", ["Chromagram", "MFCCs", "Waveform", "Spectrogram", "RMS Curve", "Spectrogram with Threshold", "STFT-Mel-Chroma", "New-One"])
+        selected_option = st.sidebar.radio("Select Visualization", ["Chromagram", "MFCCs", "Waveform", "Spectrogram", "RMS Curve", "Spectrogram with Threshold", "STFT-Mel-Chroma"])
 
         if selected_option == "Chromagram":
             st.subheader("Chromagram")
@@ -238,26 +239,26 @@ def main():
                     ![Combined Visualization](https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Spectrogram-19thCentrury-AcousticCommunication.jpg/1024px-Spectrogram-19thCentrury-AcousticCommunication.jpg)
                 """)
             
-        elif selected_option == "New-One":
-            # Call the function to generate the animation
-            animation = generate_spectrogram_animation(audio_file)
+        # elif selected_option == "New-One":
+        #     # Call the function to generate the animation
+        #     animation = generate_spectrogram_animation(audio_file)
 
-            # Save the animation as a video file
-            animation_file = "animation.mp4"
-            animation.save(animation_file, fps=10)
+        #     # Save the animation as a video file
+        #     animation_file = "animation.mp4"
+        #     animation.save(animation_file, fps=10)
 
-            # Display the saved animation in the Streamlit app
-            st.video(animation_file)
-            with st.expander("Detail Explanation"):
-                st.markdown("""
-                    **Spectrogram Animation**
-                    - **About**: This animation shows the evolution of the spectrogram over time.
-                    - **Why Use**: Useful for observing changes in the spectral content of the audio signal dynamically.
-                    - **When to Use**: Use this for detailed time-frequency analysis and to observe transient events in the audio.
-                    - **Main Purpose**: To visualize how the frequency components of the audio signal evolve over time in an animated format.
+        #     # Display the saved animation in the Streamlit app
+        #     st.video(animation_file)
+        #     with st.expander("Detail Explanation"):
+        #         st.markdown("""
+        #             **Spectrogram Animation**
+        #             - **About**: This animation shows the evolution of the spectrogram over time.
+        #             - **Why Use**: Useful for observing changes in the spectral content of the audio signal dynamically.
+        #             - **When to Use**: Use this for detailed time-frequency analysis and to observe transient events in the audio.
+        #             - **Main Purpose**: To visualize how the frequency components of the audio signal evolve over time in an animated format.
 
-                    [Spectrogram Animation](https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Animated_spectrogram_example.gif/800px-Animated_spectrogram_example.gif)
-                """)
+        #             [Spectrogram Animation](https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Animated_spectrogram_example.gif/800px-Animated_spectrogram_example.gif)
+        #         """)
 
 if __name__ == "__main__":
     main()
