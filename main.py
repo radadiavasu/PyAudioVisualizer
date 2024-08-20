@@ -7,6 +7,7 @@ import wave
 import tempfile
 import io
 def main():
+    
     html_content = """
     <div class="version">
     <div class="demo version-section">
@@ -67,18 +68,18 @@ def main():
     
     st.sidebar.title("Audio Visualizer")
     
-    # File uploader
+    # Uploading a file format mp3/wav.
     audio_file = st.sidebar.file_uploader("Upload an audio file", type=["wav", "mp3"])
     
 
     if audio_file is not None:
-        audio_bytes = audio_file.read()  # Read the content of the uploaded file
+        audio_bytes = audio_file.read()  # Reading audio file.
         
-        # Now you can use the audio bytes to process the audio data
+        # Now you can use the audio bytes to process the audio data.
         y, sr = librosa.load(io.BytesIO(audio_bytes), sr=None)
         
         
-        # Display audio length and sample rate
+        # Display audio length and sample rate.
         audio_length = len(y) // sr
         frames_per_second = len(y) // audio_length
         audio_format = audio_file.type.split("/")[-1].upper()
@@ -86,7 +87,7 @@ def main():
         samples = np.arange(len(y))
         frequency = 440; volume = 10000; audio_data = volume * np.sin(2 * np.pi * frequency * samples / sr)[1:]
 
-        # Display information in table format
+        # Information in table format.
         st.subheader("Audio Information")
         info_data = {
             "Items": ["Audio Length (Sec)", "Sample Rate (Hz)", "Frames Per Second (FPS)", "Format of Audio", "Samples", "Audio Data"],
@@ -94,12 +95,20 @@ def main():
         }
         st.table(info_data)
 
-        # Display uploaded audio
+        # Visualize uploaded audio.
         st.subheader("Uploaded Audio")
         st.audio(audio_bytes, format="mp3/wav")
 
-        # Sidebar option menu
-        selected_option = st.sidebar.radio("Select Visualization", ["Chromagram", "MFCCs", "Waveform", "Spectrogram", "RMS Curve", "Spectrogram with Threshold", "STFT-Mel-Chroma"])
+        options = ["Chromagram", "MFCCs", "Waveform", "Spectrogram", "RMS Curve", "Spectrogram with Threshold", "STFT-Mel-Chroma", "Power Spectral Density (PSD)", "Cepstrum", "Autocorrelation Function",
+                   "Wavelet Transform", "Tonal Analysis", "Timbre Features"]
+
+        disabled_services = True
+
+        if disabled_services:
+            options = [opt for opt in options if opt != "Waveform"]
+
+        # Sidebar option menu starts.
+        selected_option = st.sidebar.radio("Select Visualization", options)
 
         if selected_option == "Chromagram":
             st.subheader("Chromagram")
@@ -239,195 +248,96 @@ def main():
                     ![Combined Visualization](https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Spectrogram-19thCentrury-AcousticCommunication.jpg/1024px-Spectrogram-19thCentrury-AcousticCommunication.jpg)
                 """)
             
-        # elif selected_option == "New-One":
-        #     # Call the function to generate the animation
-        #     animation = generate_spectrogram_animation(audio_file)
+        elif selected_option == "Power Spectral Density (PSD)":
+            st.subheader("PSD")
+            plt_psd = plot_power_spectral_density(y, sr)
+            st.pyplot(plt_psd)
+            with st.expander("Detail Explanation"):
+                st.markdown("""
+                    **Spectrogram Animation**
+                    - **About**: This animation shows the evolution of the spectrogram over time.
+                    - **Why Use**: Useful for observing changes in the spectral content of the audio signal dynamically.
+                    - **When to Use**: Use this for detailed time-frequency analysis and to observe transient events in the audio.
+                    - **Main Purpose**: To visualize how the frequency components of the audio signal evolve over time in an animated format.
 
-        #     # Save the animation as a video file
-        #     animation_file = "animation.mp4"
-        #     animation.save(animation_file, fps=10)
+                    [Spectrogram Animation](https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Animated_spectrogram_example.gif/800px-Animated_spectrogram_example.gif)
+                """)
 
-        #     # Display the saved animation in the Streamlit app
-        #     st.video(animation_file)
-        #     with st.expander("Detail Explanation"):
-        #         st.markdown("""
-        #             **Spectrogram Animation**
-        #             - **About**: This animation shows the evolution of the spectrogram over time.
-        #             - **Why Use**: Useful for observing changes in the spectral content of the audio signal dynamically.
-        #             - **When to Use**: Use this for detailed time-frequency analysis and to observe transient events in the audio.
-        #             - **Main Purpose**: To visualize how the frequency components of the audio signal evolve over time in an animated format.
+        elif selected_option == "Cepstrum":
+            st.subheader("Cepstrum")
+            plt_cepstrum = plot_cepstrum(y, sr)
+            st.pyplot(plt_cepstrum)
+            with st.expander("Detail Explanation"):
+                st.markdown("""
+                    **Spectrogram Animation**
+                    - **About**: This animation shows the evolution of the spectrogram over time.
+                    - **Why Use**: Useful for observing changes in the spectral content of the audio signal dynamically.
+                    - **When to Use**: Use this for detailed time-frequency analysis and to observe transient events in the audio.
+                    - **Main Purpose**: To visualize how the frequency components of the audio signal evolve over time in an animated format.
 
-        #             [Spectrogram Animation](https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Animated_spectrogram_example.gif/800px-Animated_spectrogram_example.gif)
-        #         """)
+                    [Spectrogram Animation](https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Animated_spectrogram_example.gif/800px-Animated_spectrogram_example.gif)
+                """)
+        
+        elif selected_option == "Autocorrelation Function":
+            st.subheader("Autocorrelation Function")
+            plt_autocorrelation = plot_autocorrelation(y, sr)
+            st.pyplot(plt_autocorrelation)
+            with st.expander("Detail Explanation"):
+                st.markdown("""
+                    **Spectrogram Animation**
+                    - **About**: This animation shows the evolution of the spectrogram over time.
+                    - **Why Use**: Useful for observing changes in the spectral content of the audio signal dynamically.
+                    - **When to Use**: Use this for detailed time-frequency analysis and to observe transient events in the audio.
+                    - **Main Purpose**: To visualize how the frequency components of the audio signal evolve over time in an animated format.
+
+                    [Spectrogram Animation](https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Animated_spectrogram_example.gif/800px-Animated_spectrogram_example.gif)
+                """)
+
+        elif selected_option == "Wavelet Transform":
+            st.subheader("Wavelet Transform")
+            plt_wavlet = plot_wavelet_transform(y, sr)
+            st.pyplot(plt_wavlet)
+            with st.expander("Detail Explanation"):
+                st.markdown("""
+                    **Spectrogram Animation**
+                    - **About**: This animation shows the evolution of the spectrogram over time.
+                    - **Why Use**: Useful for observing changes in the spectral content of the audio signal dynamically.
+                    - **When to Use**: Use this for detailed time-frequency analysis and to observe transient events in the audio.
+                    - **Main Purpose**: To visualize how the frequency components of the audio signal evolve over time in an animated format.
+
+                    [Spectrogram Animation](https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Animated_spectrogram_example.gif/800px-Animated_spectrogram_example.gif)
+        
+                """)
+        
+        elif selected_option == "Tonal Analysis":
+            st.subheader("Tonal Analysis")
+            plt_tonal = plot_tonal_analysis(y, sr)
+            st.pyplot(plt_tonal)
+            with st.expander("Detail Explanation"):
+                st.markdown("""
+                    **Spectrogram Animation**
+                    - **About**: This animation shows the evolution of the spectrogram over time.
+                    - **Why Use**: Useful for observing changes in the spectral content of the audio signal dynamically.
+                    - **When to Use**: Use this for detailed time-frequency analysis and to observe transient events in the audio.
+                    - **Main Purpose**: To visualize how the frequency components of the audio signal evolve over time in an animated format.
+
+                    [Spectrogram Animation](https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Animated_spectrogram_example.gif/800px-Animated_spectrogram_example.gif)
+                """)
+        
+        elif selected_option == "Timbre Features":
+            st.subheader("Timbre Features Analysis")
+            plt_timbre = plot_timbre_features(y, sr)
+            st.pyplot(plt_timbre)
+            with st.expander("Detail Explanation"):
+                st.markdown("""
+                    **Spectrogram Animation**
+                    - **About**: This animation shows the evolution of the spectrogram over time.
+                    - **Why Use**: Useful for observing changes in the spectral content of the audio signal dynamically.
+                    - **When to Use**: Use this for detailed time-frequency analysis and to observe transient events in the audio.
+                    - **Main Purpose**: To visualize how the frequency components of the audio signal evolve over time in an animated format.
+
+                    [Spectrogram Animation](https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Animated_spectrogram_example.gif/800px-Animated_spectrogram_example.gif)
+                """)
 
 if __name__ == "__main__":
     main()
-
-
-# import streamlit as st
-# from helper import *
-# import librosa
-# import matplotlib.pyplot as plt
-# import numpy as np
-
-# def main():
-#     st.sidebar.title("Audio Visualizer")
-
-#     # File uploader
-#     audio_file = st.sidebar.file_uploader("Upload an audio file", type=["wav", "mp3"])
-
-#     if audio_file is not None:
-#         y, sr = librosa.load(audio_file, sr=None)
-        
-#         # Display audio length and sample rate
-#         audio_length = len(y) // sr
-#         frames_per_second = len(y) // audio_length
-        
-#         col1, col2, col3 = st.columns(3)
-#         with col1:
-#             st.header("Audio Length in Seconds")
-#             st.title(audio_length)
-#         with col2:
-#             st.header("Sample Rate in Hz")
-#             st.title(sr)
-#         with col3:
-#             st.header("Frames Per Second (FPS)")
-#             st.title(frames_per_second)
-#         # st.write(f"Audio Length: {audio_length:.2f} seconds")
-#         # st.write(f"Sample Rate: {sr} Hz")
-        
-#         # # Compute STFT (log scale)
-#         # stft = compute_stft(y, sr)
-
-#         # # Compute chroma
-#         # chroma = compute_chroma(y, sr)
-
-#         # # Compute mel spectrogram
-#         # mel_spec = compute_mel(y, sr)
-
-#         # Plot results
-#         fig, ax = plt.subplots(nrows=3, ncols=1, sharex=True)
-
-#         # Plot STFT (log scale)
-#         img1 = librosa.display.specshow(stft, x_axis='time', y_axis='log', ax=ax[0])
-#         ax[0].set(title='STFT (log scale)')
-
-#         # Plot mel spectrogram
-#         img2 = librosa.display.specshow(mel_spec, x_axis='time', y_axis='mel', ax=ax[1])
-#         ax[1].set(title='Mel')
-
-#         # Plot chroma features
-#         img3 = librosa.display.specshow(chroma, x_axis='time', y_axis='chroma', 
-#                                          key='Eb:maj', ax=ax[2])
-#         ax[2].set(title='Chroma')
-        
-#         chromagram = librosa.feature.chroma_cqt(y=y, sr=sr)
-        
-#         plt_mfccs = librosa.feature.mfcc(y=y, sr=sr)
-        
-        
-#         # Sidebar option menu
-#         selected_option = st.sidebar.selectbox("Select Visualization", ["Chromagram", "MFCCs", "Spectrogram", "RMS Curve", "Probability Curve", "Spectrogram with Threshold", "Combined"])
-
-#         if selected_option == "Chromagram":
-#             st.subheader("Chromagram")
-#             plt_chromagram = plot_chromagram(chromagram, sr)
-#             st.pyplot(plt_chromagram)
-
-#         elif selected_option == "MFCCs":
-#             st.subheader("MFCCs")
-#             mfccs = plot_mfccs(plt_mfccs, sr)
-#             st.pyplot(mfccs)
-
-#         elif selected_option == "Spectrogram":
-#             st.subheader("Spectrogram")
-#             plt_spec = plot_spectrogram(y, sr)
-#             st.pyplot(plt_spec)
-
-#         elif selected_option == "RMS Curve":
-#             st.subheader("Root-Mean-Square (RMS) Curve")
-#             rms_curve = plot_rms_curve(y, sr)
-#             st.pyplot(rms_curve)
-
-#         elif selected_option == "Probability Curve":
-#             st.subheader("Probability Root-Mean-Square (RMS) Curve")
-#             prob_curve = plot_probability_curve(y, sr)
-#             st.pyplot(prob_curve)
-
-#         elif selected_option == "Spectrogram with Threshold":
-#             st.subheader("Spectrogram with Threshold")
-#             spec_to_threshold = plot_spectrogram_with_threshold(y, sr)
-#             st.pyplot(spec_to_threshold)
-            
-#         elif selected_option == "Combined":
-#             st.subheader("Combined Visualization")
-#             stft = compute_stft(y, sr)
-#             mel_spec = compute_mel(y, sr)
-#             chroma = compute_chroma(y, sr)
-#             fig, ax = plt.subplots(nrows=3, ncols=1, figsize=(10, 10), sharex=True)
-
-#             # Plot STFT
-#             ax[0].imshow(stft, aspect='auto', origin='lower', cmap='inferno', extent=[0, len(y)/sr, 0, sr/2])
-#             ax[0].set_title('STFT (log scale)')
-#             ax[0].set_ylabel('Frequency (Hz)')
-
-#             # Plot Mel spectrogram
-#             ax[1].imshow(mel_spec, aspect='auto', origin='lower', cmap='inferno', extent=[0, len(y)/sr, 0, sr/2])
-#             ax[1].set_title('Mel Spectrogram')
-#             ax[1].set_ylabel('Frequency (Hz)')
-
-#             # Plot Chroma
-#             ax[2].imshow(chroma, aspect='auto', origin='lower', cmap='inferno', extent=[0, len(y)/sr, 0, 12])
-#             ax[2].set_title('Chroma')
-#             ax[2].set_xlabel('Time (s)')
-#             ax[2].set_ylabel('Pitch Class')
-
-#             plt.tight_layout()
-#             st.pyplot()
-        
-        
-
-#         # To eliminate redundant axis labels
-#         for ax_i in ax:
-#             ax_i.label_outer()
-
-#         # Add colorbars
-#         fig.colorbar(img1, ax=[ax[0], ax[1]])
-#         fig.colorbar(img3, ax=[ax[2]])
-        
-        
-#         st.pyplot(fig)
-    
-        
-# if __name__ == "__main__":
-#     main()
-
-
-# Original Code for only Mel-Specrogram
-
-# import streamlit as st
-# from helper import compute_melspectrogram, plot_melspectrogram
-# import librosa
-
-# def main():
-#     st.title("Audio Mel Spectrogram Visualizer")
-
-#     # File uploader
-#     audio_file = st.file_uploader("Upload an audio file", type=["wav", "mp3"])
-
-#     if audio_file is not None:
-#         # Compute mel spectrogram
-#         melspectrogram, sr = compute_melspectrogram(audio_file)
-        
-#         # Display audio length and sample rate
-#         audio_length = len(melspectrogram.T) * 512 / sr
-#         st.write(f"Audio Length: {audio_length:.2f} seconds")
-#         st.write(f"Sample Rate: {sr} Hz")
-
-#         # Display mel spectrogram
-#         st.subheader("Mel Spectrogram")
-#         plot = plot_melspectrogram(melspectrogram, sr)
-#         st.pyplot(plot)
-
-# if __name__ == "__main__":
-#     main()

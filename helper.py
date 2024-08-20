@@ -127,3 +127,81 @@ def generate_spectrogram_animation(patches):
                                   blit=True)
     
     return ani
+
+def plot_power_spectral_density(y, sr):
+    plt.figure(figsize=(14, 5))
+    plt.psd(y, NFFT=2048, Fs=sr)
+    plt.title("Power Spectral Density")
+    plt.xlabel("Frequency (Hz)")
+    plt.ylabel("Power/Frequency (dB/Hz)")
+    return plt
+
+def plot_cepstrum(y, sr):
+    # Compute the cepstrum
+    spectrum = np.fft.fft(y)
+    log_spectrum = np.log(np.abs(spectrum))
+    cepstrum = np.fft.ifft(log_spectrum).real
+
+    plt.figure(figsize=(14, 5))
+    plt.plot(cepstrum)
+    plt.title("Cepstrum")
+    plt.xlabel("Quefrency (samples)")
+    plt.ylabel("Amplitude")
+    return plt
+
+def plot_autocorrelation(y, sr):
+    # Compute autocorrelation
+    autocorr = np.correlate(y, y, mode='full')
+    lags = np.arange(-len(y) + 1, len(y))
+
+    plt.figure(figsize=(14, 5))
+    plt.plot(lags, autocorr)
+    plt.title("Autocorrelation")
+    plt.xlabel("Lag")
+    plt.ylabel("Autocorrelation")
+    return plt
+
+def plot_wavelet_transform(y, sr):
+    try:
+        import pywt
+        # Compute wavelet transform
+        coeffs = pywt.wavedec(y, 'haar', level=6)
+        plt.figure(figsize=(14, 5))
+        for i, coeff in enumerate(coeffs):
+            plt.plot(coeff, label=f'Level {i}')
+        plt.title("Wavelet Transform")
+        plt.xlabel("Sample Index")
+        plt.ylabel("Coefficient Value")
+        plt.legend()
+        return plt
+    except ModuleNotFoundError as e:
+        print(f"{e} Module not found!!!")
+
+
+def plot_tonal_analysis(y, sr):
+    # Compute tonal analysis features
+    tonnetz = librosa.feature.tonnetz(y=y, sr=sr)
+    plt.figure(figsize=(14, 5))
+    librosa.display.specshow(tonnetz, sr=sr, x_axis='time')
+    plt.colorbar()
+    plt.title("Tonal Analysis")
+    return plt
+
+def plot_timbre_features(y, sr):
+    # Example: Spectral Flatness and Bandwidth
+    spectral_flatness = librosa.feature.spectral_flatness(y=y)
+    spectral_bandwidth = librosa.feature.spectral_bandwidth(y=y)
+    plt.figure(figsize=(14, 5))
+    plt.subplot(2, 1, 1)
+    plt.plot(spectral_flatness[0])
+    plt.title("Spectral Flatness")
+    plt.xlabel("Time")
+    plt.ylabel("Spectral Flatness")
+    
+    plt.subplot(2, 1, 2)
+    plt.plot(spectral_bandwidth[0])
+    plt.title("Spectral Bandwidth")
+    plt.xlabel("Time")
+    plt.ylabel("Spectral Bandwidth")
+    plt.tight_layout()
+    return plt
