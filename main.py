@@ -6,8 +6,10 @@ import numpy as np
 import wave
 import tempfile
 import io
+
+
 def main():
-    
+
     html_content = """
     <div class="version">
     <div class="demo version-section">
