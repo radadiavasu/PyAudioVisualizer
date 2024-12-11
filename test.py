@@ -51,12 +51,6 @@ if st.button("Process Directory"):
         st.write("Please enter a valid directory path.")
 with st.expander("Detail Explanation"):
     st.markdown("""
-        **Speaker Identification**
-        - **About**: This animation shows the evolution of the spectrogram over time.
-        - **Why Use**: Useful for observing changes in the spectral content of the audio signal dynamically.
-        - **When to Use**: Use this for detailed time-frequency analysis and to observe transient events in the audio.
-        - **Main Purpose**: To visualize how the frequency components of the audio signal evolve over time in an animated format.
-
         - Identifying speakers from audio data is a common task in the field of speech processing. One approach is to extract relevant features from the audio, such as spectrograms, MFCCs (Mel-Frequency Cepstral Coefficients), or other representations, 
           and then use machine learning algorithms, such as neural networks or classifiers, to identify speakers based on these features.
 
