@@ -57,24 +57,21 @@ with st.expander("Detail Explanation"):
         - **Feature Extraction**:
 
         **Spectrograms**: Visualize the frequency content of the audio signal over time. You can use libraries like Librosa or SciPy to compute spectrograms.
-        MFCCs: These are commonly used features for speech recognition tasks. They capture the short-term power spectrum of a sound and are widely used in speaker recognition.
-        Other features: You can also extract features such as pitch, energy, formants, etc., depending on your specific requirements.
-        Feature Representation:
-
-        Once you have extracted the features, you'll typically represent them in a format suitable for machine learning algorithms. This could involve flattening the spectrogram or MFCC matrices into one-dimensional vectors, for example.
-        Speaker Identification Model:
-
-        Train a machine learning model or a deep learning model on your dataset. You can use techniques such as Support Vector Machines (SVMs), Random Forests, Convolutional Neural Networks (CNNs), Recurrent Neural Networks (RNNs), or Transformer models.
+                
+        **MFCCs**: These are commonly used features for speech recognition tasks. They capture the short-term power spectrum of a sound and are widely used in speaker recognition.
+        - Other features: You can also extract features such as pitch, energy, formants, etc., depending on your specific requirements.
+        
+        **Feature Representation**: Once you have extracted the features, you'll typically represent them in a format suitable for machine learning algorithms. This could involve flattening the spectrogram or MFCC matrices into one-dimensional vectors, for example.
+        
+        **Speaker Identification Model**: Train a machine learning model or a deep learning model on your dataset. You can use techniques such as Support Vector Machines (SVMs), Random Forests, Convolutional Neural Networks (CNNs), Recurrent Neural Networks (RNNs), or Transformer models.
         Use labeled data where each audio clip is associated with the identity of the speaker.
-        Evaluation:
-
-        Evaluate the performance of your model using metrics such as accuracy, precision, recall, or F1-score.
+        
+        **Evaluation**: Evaluate the performance of your model using metrics such as accuracy, precision, recall, or F1-score.
         Use techniques like cross-validation to ensure the generalization of your model.
-        Fine-tuning and Optimization:
-
-        Depending on the performance of your model, you might need to fine-tune hyperparameters, try different architectures, or explore data augmentation techniques to improve performance.
-        Inference:
-
+                
+        **Fine-tuning and Optimization**: Depending on the performance of your model, you might need to fine-tune hyperparameters, try different architectures, or explore data augmentation techniques to improve performance.
+        
+        **Inference**:
         Once your model is trained and validated, you can use it to predict speaker identities on unseen audio data.
         Remember, the success of your speaker identification system will depend on various factors such as the quality and diversity of your dataset, the choice of features, and the effectiveness of your machine learning model. Experimentation and iterative improvements are key to building a robust system.
     """)
