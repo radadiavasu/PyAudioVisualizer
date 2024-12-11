@@ -174,8 +174,10 @@ def plot_wavelet_transform(y, sr):
         plt.ylabel("Coefficient Value")
         plt.legend()
         return plt
-    except ModuleNotFoundError as e:
-        print(f"{e} Module not found!!!")
+    except:
+        raise ModuleNotFoundError
+    # except ModuleNotFoundError as e:
+    #     print(f"{e} Module not found!!!")
 
 
 def plot_tonal_analysis(y, sr):

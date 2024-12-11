@@ -49,3 +49,13 @@ if st.button("Process Directory"):
             st.write("No audio files found in the specified directory.")
     else:
         st.write("Please enter a valid directory path.")
+with st.expander("Detail Explanation"):
+    st.markdown("""
+        **Speaker Identification**
+        - **About**: This animation shows the evolution of the spectrogram over time.
+        - **Why Use**: Useful for observing changes in the spectral content of the audio signal dynamically.
+        - **When to Use**: Use this for detailed time-frequency analysis and to observe transient events in the audio.
+        - **Main Purpose**: To visualize how the frequency components of the audio signal evolve over time in an animated format.
+
+        [Spectrogram Animation](https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Animated_spectrogram_example.gif/800px-Animated_spectrogram_example.gif)
+    """)
